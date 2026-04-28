@@ -1,0 +1,1 @@
+$routes->resource('barang');
