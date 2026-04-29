@@ -2,12 +2,12 @@
 
 namespace App\Controllers;
 
-use App\Models\barangModel;
+use App\Models\BarangModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class Barang extends ResourceController
 {
-    protected $modelName = 'App\Models\barangModel';
+    protected $modelName = 'App\Models\BarangModel';
     protected $format    = 'json';
 
     // GET 
