@@ -57,6 +57,7 @@ berjalan di `http://localhost:3000`
 ## ENDPOINT API
 Testing dapat dilakukan di Postman
 1. Auth Service (/auth)
+
 | Method | Endpoint | Deskripsi |
 | :--- | :--- | :--- |
 | POST | /auth/register | registrasi user |
@@ -64,6 +65,7 @@ Testing dapat dilakukan di Postman
 
 
 2. Inventory Service (/inventory)
+
 | Method | Endpoint | Deskripsi |
 | :--- | :--- | :--- |
 | GET | /inventory/barang | Ambil semua barang |
