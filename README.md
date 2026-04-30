@@ -1,25 +1,36 @@
 # Sistem Inventaris Toko/Gudang
 Sistem API Gateway berbasis Node.js (Express) yang menghubungkan beberapa layanan microservices:
 1. Auth Service (Node.js) = Authentication (JWT + OAuth GitHub)
-2. Inventory Service (PHP) = Manajemen Barang & Stok
-3. Log/Supplier Service (Node.js) = Logging & Supplier
+2. Inventory Service (PHP - CodeIgniter4) = Manajemen Barang & Stok
+3. API Gateaway (Node.js) = Routing
+4. Loging Service (MongoDB) = Monitoring aktivitas
 
 Semua request dari client hanya melalui API Gateway.
+
+## Arsitektur sistem
+Client tidak langsung mengakses servis:
+`Client -> Gateaway -> Auth/Inventory Servis`
+### gateaway juga mencatat aktivitas ke logging servis
 
 ## Teknologi yang digunakan
 1. Node.js
 2. Express.js
 3. JSON Web Token (JWT)
 4. PHP (CodeIgniter 4)
-5. MySQL 
-6. Git & GitHub
-7. Postman
+5. MySQL (Inventory Database)
+6. MongoDB
+7. Git & GitHub
+8. Postman
 
 ## Instalasi
-Buka terminal dan masuk ke folder projek lalu instal:
+1. Untuk Node.js buka terminal dan masuk ke folder projek lalu instal:
 ``` bash
 npm install express jsonwebtoken bcrypt dotenv cors axios express-session http-proxy-middleware
 ```
+2. Untuk PHP CodeIgniter4;
+   ``` bash
+   composer install
+   ```
 
 ## Konfigurasi dan Menjalankan Server
 1. Auth Service
