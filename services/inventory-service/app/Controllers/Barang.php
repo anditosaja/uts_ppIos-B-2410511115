@@ -31,7 +31,10 @@ class Barang extends ResourceController
     // POST 
     public function create()
     {
-        $data = $this->request->getJSON();
+        $data = $this->request->getJSON(true);
+
+         var_dump($data); 
+         die();
 
         $this->model->insert($data);
 
@@ -43,7 +46,9 @@ class Barang extends ResourceController
     // PUT by id
     public function update($id = null)
     {
-        $data = $this->request->getJSON();
+        $data = $this->request->getJSON(true);
+         var_dump($data);
+         die();
 
         if (!$this->model->find($id)) {
             return $this->failNotFound("Data tidak ditemukan");

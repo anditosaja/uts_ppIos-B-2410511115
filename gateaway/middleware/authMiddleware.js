@@ -1,4 +1,8 @@
 const jwt = require("jsonwebtoken");
+const checkRole = require("./middleware/roleMiddleware");
+
+// hanya admin boleh hapus barang
+app.use("/inventory/barang", verifyToken, checkRole("admin"));
 
 // validasi JWT
 const verifyToken = (req, res, next) => {
