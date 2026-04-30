@@ -10,7 +10,7 @@ const {
 // Akses dan refresh token
 const generateTokens = (user) => {
   const accessToken = jwt.sign(
-    { email: user.email },
+    { email: user.email,  role: user.role },
     process.env.JWT_SECRET,
     { expiresIn: "15m" }
   );
@@ -33,12 +33,14 @@ const register = async (req, res) => {
   }
 
   const hashed = await bcrypt.hash(password, 10);
-  const user = createUser({ email, password: hashed });
+  const user = createUser({ email, password: hashed,  role: "user" });
 
   res.status(201).json(user);
 };
 
 // Login user
+let refreshTokens = [];
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -49,6 +51,8 @@ const login = async (req, res) => {
   if (!valid) return res.status(401).json({ message: "Password salah" });
 
   const tokens = generateTokens(user);
+   refreshTokens.push(tokens.refreshToken);
+
   res.json(tokens);
 };
 
@@ -56,13 +60,15 @@ const login = async (req, res) => {
 const refreshToken = (req, res) => {
   const { token } = req.body;
 
-  if (!token) return res.sendStatus(401);
+  if (!refreshTokens.includes(token)) {
+    return res.sendStatus(403);
+  }
 
   jwt.verify(token, process.env.REFRESH_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
 
     const accessToken = jwt.sign(
-      { email: user.email },
+      { email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
     );
