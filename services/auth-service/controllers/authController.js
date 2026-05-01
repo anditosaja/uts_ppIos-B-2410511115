@@ -16,7 +16,7 @@ const generateTokens = (user) => {
   );
 
   const refreshToken = jwt.sign(
-    { email: user.email },
+    { email: user.email, role:user.role },
     process.env.REFRESH_SECRET,
     { expiresIn: "7d" }
   );
@@ -79,12 +79,18 @@ const refreshToken = (req, res) => {
 
 // Logout
 const logout = (req, res) => {
+  const { token } = req.body;
+
+  refreshTokens = refreshTokens.filter(t => t !== token);
+
   res.json({ message: "Logout berhasil" });
 };
 
 // redirect ke Github OAuht
 const githubLogin = (req, res) => {
-  const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}`;
+  const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}
+  &redirect_uri=${process.env.GITHUB_CALLBACK}&scope=user:email`;
+  
   res.redirect(url);
 };
 
@@ -110,7 +116,13 @@ const githubCallback = async (req, res) => {
       headers: { Authorization: `Bearer ${access_token}` }
     });
 
-    const email = userRes.data.login;
+    const emailRes = await axios.get("https://api.github.com/user/emails", {
+      headers: { Authorization: `Bearer ${access_token}` }
+    });
+
+    const email = emailRes.data[0].email;
+    const name = userRes.data.name;
+    const avatar = userRes.data.avatar_url;
 
     let user = findUserByEmail(email);
 
