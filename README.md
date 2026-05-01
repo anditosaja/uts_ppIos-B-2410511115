@@ -3,7 +3,7 @@ Sistem API Gateway berbasis Node.js (Express) yang menghubungkan beberapa layana
 1. Auth Service (Node.js) = Authentication (JWT + OAuth GitHub)
 2. Inventory Service (PHP - CodeIgniter4) = Manajemen Barang & Stok
 3. API Gateaway (Node.js) = Routing
-4. Loging Service (MongoDB) = Monitoring aktivitas
+4. Loging Service = Monitoring aktivitas
 
 Semua request dari client hanya melalui API Gateway.
 
@@ -18,14 +18,13 @@ Client tidak langsung mengakses servis:
 3. JSON Web Token (JWT)
 4. PHP (CodeIgniter 4)
 5. MySQL (Inventory Database)
-6. MongoDB
-7. Git & GitHub
-8. Postman
+6. Git & GitHub
+7. Postman
 
 ## Instalasi
 1. Untuk Node.js buka terminal dan masuk ke folder projek lalu instal:
 ``` bash
-npm install express jsonwebtoken bcrypt dotenv cors axios express-session http-proxy-middleware
+npm install express jsonwebtoken bcrypt dotenv cors axios express-session http-proxy-middleware mysql2
 ```
 2. Untuk PHP CodeIgniter4;
    ``` bash
