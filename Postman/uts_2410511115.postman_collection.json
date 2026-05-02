@@ -10,13 +10,252 @@
     {
       "name": "Register email",
       "request": {
-        "method": "GET",
-        "header": []
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"anditodwi03@gmail.com\",\r\n  \"password\": \"123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:3000/auth/register",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3000",
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
       },
       "response": []
     },
     {
       "name": "Login email",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"anditodwi03@gmail.com\",\r\n    \"password\": \"123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Tambah Inventory",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuZGl0b2R3aTAzQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc3NjkyMzU0LCJleHAiOjE3Nzc2OTMyNTR9.K1_-2ufPt7z1ledzaVO5eVIdulex6B0ao-HiUKQW1DY",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"nama_barang\": \"Laptop Asus ROG\",\r\n    \"stok\": 15,\r\n    \"harga\": 15000000,\r\n    \"id_kategori\": 1,\r\n    \"id_supplier\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/barang",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "barang"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Akses Inventory",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuZGl0b2R3aTAzQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc3NjQ2NTY0LCJleHAiOjE3Nzc2NDc0NjR9.660o1yZmI7r9F1x1ZbOddXgxxlRsZsfz1GeZGNxk8bo",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Bearer",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuZGl0b2R3aTAzQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc3NjIyODg0LCJleHAiOjE3Nzc2MjM3ODR9.rWyc8YpspJqQbMEDMAn7ZUHagpYIJNUHdHfHBonHBls",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/inventory/barang",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "inventory",
+            "barang"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "hapus barang",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuZGl0b2R3aTAzQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc3NjI3NzM3LCJleHAiOjE3Nzc2Mjg2Mzd9.akPVT_Rdrm444hRMo-8UG8oIxumX3jH5aldyzYvfrY8",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Bearer",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuZGl0b2R3aTAzQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc3NjIyODg0LCJleHAiOjE3Nzc2MjM3ODR9.rWyc8YpspJqQbMEDMAn7ZUHagpYIJNUHdHfHBonHBls",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/inventory/barang/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "inventory",
+            "barang",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "periksa log",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuZGl0b2R3aTAzQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc3NjQ2NTY0LCJleHAiOjE3Nzc2NDc0NjR9.660o1yZmI7r9F1x1ZbOddXgxxlRsZsfz1GeZGNxk8bo",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "bearer",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuZGl0b2R3aTAzQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc3NjIzNzkyLCJleHAiOjE3Nzc2MjQ2OTJ9.D8bJ-RHlW7XQlNII81wq2vKRvH-hGyT0iYKpU7P4ZM8",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/logs",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "logs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "refresh token",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuZGl0b2R3aTAzQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc3NjQ2NTY0LCJleHAiOjE3Nzc2NDc0NjR9.660o1yZmI7r9F1x1ZbOddXgxxlRsZsfz1GeZGNxk8bo",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"anditodwi03@gmail.com\",\r\n    \"password\": \"123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/auth/refresh",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "auth",
+            "refresh"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "cari barang by id",
       "request": {
         "method": "GET",
         "header": []
@@ -24,7 +263,37 @@
       "response": []
     },
     {
-      "name": "AKses Inventory",
+      "name": "update barang",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"nama_barang\": \"Mouse Asus\",\r\n    \"stok\": 10,\r\n    \"harga\": 50000,\r\n    \"id_kategori\": 1,\r\n    \"id_supplier\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/inventory/barang/4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "inventory",
+            "barang",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "github callback",
       "request": {
         "method": "GET",
         "header": []

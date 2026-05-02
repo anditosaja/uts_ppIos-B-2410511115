@@ -1,26 +1,36 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const Log = require("./models/logModel");
-
+const mysql = require("mysql2");
 const app = express();
 app.use(express.json());
 
-// koneksi MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/logdb");
-
-// tambah log
-app.post("/logs", async (req, res) => {
-  const log = new Log(req.body);
-  await log.save();
-  res.json({ message: "Log tersimpan" });
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "log_db"
 });
 
-// ambil log
-app.get("/logs", async (req, res) => {
-  const logs = await Log.find();
-  res.json(logs);
+db.connect((err) => {
+  if (err) console.error("MySQL Gagal:", err);
+  else console.log("MySQL Connected!");
 });
 
-app.listen(3003, () => {
-  console.log("Log service jalan di 3003");
+// POST simpan log
+app.post("/logs", (req, res) => {
+  const { method, url } = req.body;
+  const sql = "INSERT INTO activity_logs (method, url) VALUES (?, ?)";
+  db.query(sql, [method, url], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: "Log tersimpan di MySQL" });
+  });
 });
+
+// GET log
+app.get("/", (req, res) => {
+  db.query("SELECT * FROM activity_logs ORDER BY timestamp DESC LIMIT 50", (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.listen(3003, () => console.log("Log Service berjalan di 3003"));

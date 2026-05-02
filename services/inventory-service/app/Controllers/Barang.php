@@ -10,13 +10,21 @@ class Barang extends ResourceController
     protected $modelName = 'App\Models\BarangModel';
     protected $format    = 'json';
 
-    // GET 
+    //get
     public function index()
     {
-        return $this->respond($this->model->findAll());
+        $page = $this->request->getGet('page') ?? 1;
+        $limit = $this->request->getGet('per_page') ?? 5;
+
+        $data = $this->model->paginate($limit);
+
+        return $this->respond([
+            'data' => $data,
+            'pager' => $this->model->pager->getDetails()
+        ]);
     }
 
-    // GET by id
+    //get by id
     public function show($id = null)
     {
         $data = $this->model->find($id);
@@ -28,13 +36,22 @@ class Barang extends ResourceController
         return $this->respond($data);
     }
 
-    // POST 
+    //post
     public function create()
     {
         $data = $this->request->getJSON(true);
 
-         var_dump($data); 
-         die();
+        $rules = [
+            'nama_barang' => 'required',
+            'stok'        => 'required|integer',
+            'harga'       => 'required|numeric',
+            'id_kategori' => 'required|integer',
+            'id_supplier' => 'required|integer'
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->fail($this->validator->getErrors());
+        }
 
         $this->model->insert($data);
 
@@ -43,15 +60,25 @@ class Barang extends ResourceController
         ]);
     }
 
-    // PUT by id
+    //put
     public function update($id = null)
     {
         $data = $this->request->getJSON(true);
-         var_dump($data);
-         die();
 
         if (!$this->model->find($id)) {
             return $this->failNotFound("Data tidak ditemukan");
+        }
+
+        $rules = [
+            'nama_barang' => 'required',
+            'stok'        => 'required|integer',
+            'harga'       => 'required|numeric',
+            'id_kategori' => 'required|integer',
+            'id_supplier' => 'required|integer'
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->fail($this->validator->getErrors());
         }
 
         $this->model->update($id, $data);
@@ -61,7 +88,7 @@ class Barang extends ResourceController
         ]);
     }
 
-    // DELETE by id
+    //delete
     public function delete($id = null)
     {
         if (!$this->model->find($id)) {

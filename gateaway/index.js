@@ -1,67 +1,58 @@
-const express = require("express");
-const { createProxyMiddleware } = require("http-proxy-middleware");
-const cors = require("cors");
-const verifyToken = require("./middleware/authMiddleware");
-const axios = require("axios");
-
-require("dotenv").config();
+require('dotenv').config();
+const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+// Konfigurasi Limit
+const limiter = rateLimit({
+    windowMs: 60 * 1000, // 1 menit
+    max: 100, // Batas request
+    message: "Terlalu banyak permintaan, coba lagi nanti."
+});
 
-// middleware logging
-const logRequest = async (req, res, next) => {
-  try {
-    await axios.post("http://localhost:3003/logs", {
-      user: req.user?.email || "guest",
-      action: "access",
-      endpoint: req.originalUrl,
-      method: req.method
-    });
-  } catch (err) {
-    console.log("Log gagal dikirim");
-  }
+app.use(limiter);
 
-  next();
-};
+// Logging sederhana 
+app.use((req, res, next) => {
+    console.log(`[${new Date().toLocaleString()}] Incoming: ${req.method} ${req.url}`);
+    next();
+});
 
-// public route
-// login, register, oauth
-app.use("/auth", createProxyMiddleware({
-  target: "http://localhost:3001",
-  changeOrigin: true
-}));
-
-//Protected route dengan jwt
-// Inventory
-app.use("/inventory", verifyToken, logRequest, createProxyMiddleware({
-  target: "http://localhost:8080",
-  changeOrigin: true,
-   pathRewrite: {
-    "^/inventory": "" 
-  },
-  onProxyReq: (proxyReq, req, res) => {
-    if (req.body) {
-      const bodyData = JSON.stringify(req.body);
-
-      proxyReq.setHeader('Content-Type', 'application/json');
-      proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-
-      proxyReq.write(bodyData);
+// AUTH SERVICE 
+app.use('/auth', createProxyMiddleware({
+    target: process.env.AUTH_SERVICE || 'http://localhost:3001',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/auth': '' 
+    },
+    
+    onProxyReq: (proxyReq, req, res) => {
+        console.log(`[Proxying] ${req.method} ${req.url} -> ${process.env.AUTH_SERVICE}${proxyReq.path}`);
     }
-  }
 }));
 
-// Log service
-app.use("/log", verifyToken, createProxyMiddleware({
-  target: "http://localhost:3003",
-  changeOrigin: true
+// INVENTORY SERVICE 
+app.use('/inventory', createProxyMiddleware({
+    target: process.env.INVENTORY_SERVICE || 'http://localhost:8080',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/inventory': '' 
+    },
+    logLevel: 'debug'
 }));
 
-// jalankan server
-const PORT = 3000;
+// LOG SERVICE
+app.use('/logs', createProxyMiddleware({
+    target: process.env.LOG_SERVICE || 'http://localhost:3003',
+    changeOrigin: true,
+    pathRewrite: {
+        '^/logs': ''
+    }
+}));
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`API Gateway berjalan di port ${PORT}`);
+    console.log(`Gateway berjalan di port ${PORT}`);
 });

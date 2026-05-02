@@ -5,7 +5,7 @@ const session = require("express-session");
 
 const authRoutes = require("./routes/authRoutes");
 
-dotenv.config();
+require("dotenv").config();
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use(session({
 }));
 
 // routing utama
-app.use("/auth", authRoutes);
+app.use("/", authRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
