@@ -6,6 +6,7 @@ Sistem API Gateway berbasis Node.js (Express) yang menghubungkan beberapa layana
 4. Loging Service = Monitoring aktivitas
 
 Semua request dari client hanya melalui API Gateway.
+Link Youtube: https://youtu.be/P6MhTWBVqps?si=ANvir5VeWNx38MQL
 
 ## Arsitektur sistem
 Client tidak langsung mengakses servis:
@@ -61,6 +62,10 @@ Testing dapat dilakukan di Postman
 | :--- | :--- | :--- |
 | POST | /auth/register | registrasi user |
 | POST | /auth/login | Login JWT |
+| POST | /auth/refresh | refresh token |
+| POST | /auth/logout | Logout |
+| GET | /auth/github | Login OAuth |
+| GET | /auth/github/callback | Callback oAuth |
 
 
 2. Inventory Service (/inventory)
@@ -68,7 +73,16 @@ Testing dapat dilakukan di Postman
 | Method | Endpoint | Deskripsi |
 | :--- | :--- | :--- |
 | GET | /inventory/barang | Ambil semua barang |
+| GET | /inventory/barang/{ID} | Ambil 1 barang |
+| POST | /inventory/barang | Tambah barang |
+| PUT | /inventory/barang/{ID} | Update barang |
+| DELETE | /inventory/barang{ID) | Hapus barang |
 
+3. Log Service (/logs)
+
+| Method | Endpoint | Deskripsi |
+| :--- | :--- | :--- |
+| GET | /logs | Ambil semua log |
 
 ## JWT Authentication
 1. Access Token (15 menit)
