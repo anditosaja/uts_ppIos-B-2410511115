@@ -17,9 +17,9 @@ db.connect((err) => {
 
 // POST simpan log
 app.post("/logs", (req, res) => {
-  const { user, action, endpoint, method } = req.body;
-  const sql = "INSERT INTO activity_logs (user, action, endpoint, method) VALUES (?, ?, ?, ?)";
-  db.query(sql, [user, action, endpoint, method], (err) => {
+  const { method, url } = req.body;
+  const sql = "INSERT INTO activity_logs (method, url) VALUES (?, ?)";
+  db.query(sql, [method, url], (err) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json({ message: "Log tersimpan di MySQL" });
   });

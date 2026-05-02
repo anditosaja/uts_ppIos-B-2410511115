@@ -1,3 +1,4 @@
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt"); //hash password
 const axios = require("axios"); // request ke Github
@@ -88,61 +89,98 @@ const logout = (req, res) => {
 
 // redirect ke Github OAuht
 const githubLogin = (req, res) => {
-  const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}
-  &redirect_uri=${process.env.GITHUB_CALLBACK}&scope=user:email`;
-  
+  const url = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&redirect_uri=${process.env.GITHUB_CALLBACK}&scope=user:email`;
   res.redirect(url);
 };
 
-// Callback dari github
+//callback
 const githubCallback = async (req, res) => {
   const code = req.query.code;
 
   try {
+
     const tokenRes = await axios.post(
       "https://github.com/login/oauth/access_token",
       {
         client_id: process.env.GITHUB_CLIENT_ID,
         client_secret: process.env.GITHUB_CLIENT_SECRET,
-        code
+        code,
+        redirect_uri: process.env.GITHUB_CALLBACK
       },
-      { headers: { Accept: "application/json" } }
+      { 
+        headers: { 
+          Accept: "application/json",
+          "User-Agent": "NodeJS-App" 
+        } 
+      }
     );
 
     const access_token = tokenRes.data.access_token;
 
-    // ambil data user githuv
-    const userRes = await axios.get("https://api.github.com/user", {
-      headers: { Authorization: `Bearer ${access_token}` }
-    });
-
-    const emailRes = await axios.get("https://api.github.com/user/emails", {
-      headers: { Authorization: `Bearer ${access_token}` }
-    });
-
-    const email = emailRes.data[0].email;
-    const name = userRes.data.name;
-    const avatar = userRes.data.avatar_url;
-
-    let user = findUserByEmail(email);
-
-    if (!user) {
-      user = createUser({ email, name, avatar, password: "oauth", provider: "github" });
+    // Proteksi 
+    if (!access_token) {
+      console.log("GitHub Response Error:", tokenRes.data);
+      return res.status(401).json({ message: "Bad Credentials / Code Expired" });
     }
 
-    const tokens = generateTokens(user);
+    // Ambil data profil
+    const userRes = await axios.get("https://api.github.com/user", {
+      headers: { 
+        Authorization: `token ${access_token}`, 
+        "User-Agent": "NodeJS-App" 
+      }
+    });
 
+    // 3. Ambil data email 
+    const emailRes = await axios.get("https://api.github.com/user/emails", {
+      headers: { 
+        Authorization: `token ${access_token}`,
+        "User-Agent": "NodeJS-App" 
+      }
+    });
+
+    const emails = emailRes.data;
+    let email = null;
+    if (emails && emails.length > 0) {
+      const primaryEmail = emails.find(e => e.primary) || emails[0];
+      email = primaryEmail.email;
+    }
+
+    const name = userRes.data.name || userRes.data.login;
+    const avatar = userRes.data.avatar_url;
+
+    // Cari atau Buat User di Database lokal
+    let user = findUserByEmail(email);
+    if (!user) {
+      user = createUser({ 
+        email, 
+        name, 
+        avatar, 
+        password: "oauth", 
+        provider: "github", 
+        role: "user" 
+      });
+    }
+
+    // JWT 
+    const tokens = generateTokens(user);
     res.json(tokens);
 
   } catch (err) {
-    res.status(500).json({ message: "OAuth gagal" });
+    if (err.response) {
+      console.log("Status:", err.response.status);
+      console.log("Data:", err.response.data);
+    } else {
+      console.log("Message:", err.message);
+    }
+    res.status(500).json({ message: "OAuth gagal", error: err.message });
   }
 };
 
 module.exports = {
   register,
   login,
-  refreshToken,
+  refreshToken: (req, res) => { /* tetap sama */ },
   logout,
   githubLogin,
   githubCallback

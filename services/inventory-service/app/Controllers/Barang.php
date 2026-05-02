@@ -10,7 +10,7 @@ class Barang extends ResourceController
     protected $modelName = 'App\Models\BarangModel';
     protected $format    = 'json';
 
-    // GET 
+    //get
     public function index()
     {
         $page = $this->request->getGet('page') ?? 1;
@@ -24,7 +24,7 @@ class Barang extends ResourceController
         ]);
     }
 
-    // GET by id
+    //get by id
     public function show($id = null)
     {
         $data = $this->model->find($id);
@@ -36,15 +36,17 @@ class Barang extends ResourceController
         return $this->respond($data);
     }
 
-    // POST 
+    //post
     public function create()
     {
         $data = $this->request->getJSON(true);
 
         $rules = [
-            'nama' => 'required',
-            'stok' => 'required|integer',
-            'harga' => 'required|numeric'
+            'nama_barang' => 'required',
+            'stok'        => 'required|integer',
+            'harga'       => 'required|numeric',
+            'id_kategori' => 'required|integer',
+            'id_supplier' => 'required|integer'
         ];
 
         if (!$this->validate($rules)) {
@@ -58,7 +60,7 @@ class Barang extends ResourceController
         ]);
     }
 
-    // PUT by id
+    //put
     public function update($id = null)
     {
         $data = $this->request->getJSON(true);
@@ -68,9 +70,11 @@ class Barang extends ResourceController
         }
 
         $rules = [
-            'nama' => 'required',
-            'stok' => 'required|integer',
-            'harga' => 'required|numeric'
+            'nama_barang' => 'required',
+            'stok'        => 'required|integer',
+            'harga'       => 'required|numeric',
+            'id_kategori' => 'required|integer',
+            'id_supplier' => 'required|integer'
         ];
 
         if (!$this->validate($rules)) {
@@ -84,7 +88,7 @@ class Barang extends ResourceController
         ]);
     }
 
-    // DELETE by id
+    //delete
     public function delete($id = null)
     {
         if (!$this->model->find($id)) {
